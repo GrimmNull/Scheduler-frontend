@@ -1,34 +1,47 @@
 import {useState} from "react"
 import ReactDom from 'react-dom'
-
+import '../stylesheets/task.scss'
 
 const Task = (props) => {
     const [clicked, setClicked] = useState(props.initialState)
-    const test1 = (
+    const [description, setDescription] = useState(props.description)
+    const [startTime, setStartTime] = useState(props.startTime)
+    const [deadline, setDeadline] = useState(props.deadline)
+    const editMode = (
         <div id={'task' + props.taskId}>
-            <input id={'taskTitle' + props.taskId} type="text" defaultValue={props.title}/>
-            <input id={'taskDescription' + props.taskId} type="text" defaultValue={props.description}/>
+            <label> Description: </label>
+            <input id={'DescriptionOfTask' + props.taskId} type="text" defaultValue={description}/><br/>
+            <label> Start time: </label>
+            <input id={'StartTime' + props.taskId} type="datetime-local" defaultValue={startTime}/><br/>
+            <label> Deadline:</label>
+            <input id={'Deadline' + props.taskId} type="datetime-local" defaultValue={deadline}/><br/>
             <button onClick={() => {
                 console.log("I've tried to finish the edits")
-                props.title=document.getElementById('taskTitle' + props.taskId).nodeValue
-                props.description=document.getElementById('taskDescription' + props.taskId).nodeValue
+                setDescription(document.getElementById('DescriptionOfTask' + props.taskId).value)
+                setStartTime(document.getElementById('StartTime' + props.taskId).value)
+                setDeadline(document.getElementById('Deadline' + props.taskId).value)
                 setClicked(!clicked)
-            }}>Finish edits</button>
+            }}>Finish edits
+            </button>
             <button onClick={() => {
                 console.log("I've tried to cancel the edits")
                 setClicked(!clicked)
-            }}>Cancel</button>
+            }}>Cancel
+            </button>
         </div>
     )
-    const test2 = (
-        <div id={'task' + props.taskId}>
-            <p>{props.title}</p><br/>
-            <p>{props.description}</p>
+    const displayMode = (
+        <div id={'task' + props.taskId} onClick={() => {
+            setClicked(!clicked)
+        }}>
+            <p>{description}</p>
+            <p>{startTime}</p>
+            <p>{deadline}</p>
             <button onClick={() => {
                 console.log("I've tried to add a subtask")
-                const thisComponent=document.getElementById('task' + props.taskId)
-                const newNode=document.createElement('div')
-                newNode.setAttribute('id','tempToReplace')
+                const thisComponent = document.getElementById('task' + props.taskId)
+                const newNode = document.createElement('div')
+                newNode.setAttribute('id', 'tempToReplace')
                 thisComponent.parentNode.insertBefore(newNode, thisComponent.nextSibling)
                 ReactDom.render(<Task
                     taskId={3}
@@ -41,13 +54,7 @@ const Task = (props) => {
         </div>
     )
 
-    return (<div id={'task' + props.taskId}>
-        {clicked ? test1 : test2}
-        <button onClick={() => {
-            setClicked(!clicked)
-        }}>Click me
-        </button>
-    </div>)
+    return !clicked ? displayMode : editMode
 }
 
 
