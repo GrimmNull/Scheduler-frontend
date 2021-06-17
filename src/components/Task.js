@@ -4,11 +4,12 @@ import '../stylesheets/task.scss'
 
 const Task = (props) => {
     const [clicked, setClicked] = useState(props.initialState)
+    const parentTaskId=props.parentTaskId
     const [description, setDescription] = useState(props.description)
     const [startTime, setStartTime] = useState(props.startTime)
     const [deadline, setDeadline] = useState(props.deadline)
     const editMode = (
-        <div id={'task' + props.taskId}>
+        <div id={'taskEdit' + props.taskId}>
             <label> Description: </label>
             <input id={'DescriptionOfTask' + props.taskId} type="text" defaultValue={description}/><br/>
             <label> Start time: </label>
@@ -16,7 +17,6 @@ const Task = (props) => {
             <label> Deadline:</label>
             <input id={'Deadline' + props.taskId} type="datetime-local" defaultValue={deadline}/><br/>
             <button onClick={() => {
-                console.log("I've tried to finish the edits")
                 setDescription(document.getElementById('DescriptionOfTask' + props.taskId).value)
                 setStartTime(document.getElementById('StartTime' + props.taskId).value)
                 setDeadline(document.getElementById('Deadline' + props.taskId).value)
@@ -24,22 +24,21 @@ const Task = (props) => {
             }}>Finish edits
             </button>
             <button onClick={() => {
-                console.log("I've tried to cancel the edits")
                 setClicked(!clicked)
             }}>Cancel
             </button>
         </div>
     )
     const displayMode = (
-        <div id={'task' + props.taskId} onClick={() => {
+        <div id={'taskDisplay' + props.taskId} onClick={() => {
             setClicked(!clicked)
         }}>
             <p>{description}</p>
             <p>{startTime}</p>
             <p>{deadline}</p>
+            {parentTaskId ? '' :
             <button onClick={() => {
-                console.log("I've tried to add a subtask")
-                const thisComponent = document.getElementById('task' + props.taskId)
+                const thisComponent = document.getElementById('taskDisplay' + props.taskId)
                 const newNode = document.createElement('div')
                 newNode.setAttribute('id', 'tempToReplace')
                 thisComponent.parentNode.insertBefore(newNode, thisComponent.nextSibling)
@@ -50,7 +49,7 @@ const Task = (props) => {
                     description={''}
                 />, newNode)
             }}>Add subtask
-            </button>
+            </button>}
         </div>
     )
 

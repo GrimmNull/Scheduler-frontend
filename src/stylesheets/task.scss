@@ -5,4 +5,10 @@ div[id^="task"] {
   margin-right: 1vw;
   margin-top:1vh;
   margin-bottom: 1vh;
+  border-radius: 5px;
+  padding-left:0.5vw;
+  width:40vw;
+}
+div[id^="task"] >button {
+  margin-bottom: 1vh;
 }

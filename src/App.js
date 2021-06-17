@@ -1,32 +1,40 @@
-import './App.css';
-import Task from './components/Task.js'
-import {useEffect, useRef} from "react";
+import './stylesheets/App.scss';
+import TaskScreen from './components/TaskScreen.js'
+import Profile from './components/Profile.js'
+import Auth from './components/Auth.js'
+import {useState} from 'react'
+
+
 
 function App() {
-    let nrOfTasks=0
-    const fetchingScreen= (
-        <h1>We are now fetching your tasks...</h1>
+
+    let [page,setPage] = useState('tasks')
+    const [logged, setLogged] = useState(false)
+    const authButton = (
+        <button onClick={() => setPage('auth')}>
+            Login
+        </button>
+    )
+    const profileButton = (
+        <button onClick={() => setPage('profile')}>
+            {sessionStorage.getItem('username')}
+        </button>
     )
 
-    let taskScreen=useRef('')
-    useEffect(() => {
-        fetch('http://localhost:8000/users/tasks/1',{
-            method: "GET"
-        }).then(res => res.json())
-            .then((result) => {
-                taskScreen.current=result.results.map(task=> <Task
-                        taskId={task.taskId}
-                        initialState={false}
-                        title={task.title}
-                        description={task.description}
-                        startTime={task.startTime}
-                        deadline={task.deadline}
-                    />)
-            }
-            )}, [])
+    const pageContent = (
+        <div>
+            <nav>
+                <button onClick={() => setPage('tasks')}>
+                    Tasks page
+                </button>
 
-    return taskScreen.current==="" ? fetchingScreen : <div>{taskScreen.current} </div>
+                {logged ? profileButton : authButton}
+            </nav>
+            {page === 'tasks' ? <TaskScreen/> : logged ? <Profile/> : <Auth/>}
+        </div>
+    )
 
+    return pageContent
 }
 
 export default App;

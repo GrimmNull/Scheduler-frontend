@@ -1,0 +1,21 @@
+.App {
+  text-align: center;
+}
+
+nav{
+  padding:1vh;
+  display:flex;
+  flex-direction: row;
+}
+
+nav > button{
+  padding:1vh;
+  color:white;
+  background: black;
+  border-radius: 5px;
+  margin-right: 0;
+}
+
+nav :last-child{
+  margin-left:auto;
+}
