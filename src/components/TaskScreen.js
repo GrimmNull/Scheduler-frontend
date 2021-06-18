@@ -1,5 +1,6 @@
 import Task from "./Task";
 import {useEffect, useState} from "react";
+import ReactDom from "react-dom";
 
 async function fetchRootTasks() {
     const rootTasks = await (await fetch(`http://localhost:8000/users/tasks/1?rootOnly=true`, {
@@ -54,7 +55,17 @@ function TaskScreen(props) {
     const [rootTasks, setRootTasks] = useState('')
     const taskPage=(
         <div>
-            <button>
+            <button onClick={() => {
+                const thisComponent = document.getElementById('taskDisplay1')
+                const newNode = document.createElement('div')
+                newNode.setAttribute('id', 'tempToReplace')
+                thisComponent.parentNode.insertBefore(newNode, thisComponent)
+                ReactDom.render(<Task
+                    initialState={true}
+                    title={''}
+                    description={''}
+                />, newNode)
+            }}>
                 Add task
             </button>
             {rootTasks}

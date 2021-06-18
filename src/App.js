@@ -2,14 +2,14 @@ import './stylesheets/App.scss';
 import TaskScreen from './components/TaskScreen.js'
 import Profile from './components/Profile.js'
 import Auth from './components/Auth.js'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 
 
 
 function App() {
 
     let [page,setPage] = useState('tasks')
-    const [logged, setLogged] = useState(false)
+    const [logged, setLogged] = useState(sessionStorage.getItem('logged'))
     const authButton = (
         <button onClick={() => setPage('auth')}>
             Login
@@ -17,8 +17,19 @@ function App() {
     )
     const profileButton = (
         <button onClick={() => setPage('profile')}>
-            {sessionStorage.getItem('username')}
+            Brandon
         </button>
+    )
+
+    const testButton = (
+        <button onClick={() => {
+            console.log(logged)
+            if (sessionStorage.getItem('logged')==='true'){
+                sessionStorage.setItem('logged', false)
+            } else {
+                sessionStorage.setItem('logged',true)
+            }
+        }}> Change logged status</button>
     )
 
     const pageContent = (
@@ -27,12 +38,16 @@ function App() {
                 <button onClick={() => setPage('tasks')}>
                     Tasks page
                 </button>
-
-                {logged ? profileButton : authButton}
+                {testButton}
+                {logged==='true' ? profileButton : authButton}
             </nav>
             {page === 'tasks' ? <TaskScreen/> : logged ? <Profile/> : <Auth/>}
         </div>
     )
+
+    useEffect(() =>{
+        setLogged(sessionStorage.getItem('logged'))
+    })
 
     return pageContent
 }
