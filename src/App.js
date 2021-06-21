@@ -2,14 +2,12 @@ import './stylesheets/App.scss';
 import TaskScreen from './components/TaskScreen.js'
 import Profile from './components/Profile.js'
 import Auth from './components/Auth.js'
-import {useEffect, useState} from 'react'
-
-
+import {AuthProvider, AuthConsumer, useAuth} from './contexts/Auth.js'
+import {useContext, useEffect, useState} from 'react'
 
 function App() {
-
-    let [page,setPage] = useState('tasks')
-    const [logged, setLogged] = useState(sessionStorage.getItem('logged'))
+    let [page, setPage] = useState('tasks')
+    const [loggedin, setLoggedin] = useState(false)
     const authButton = (
         <button onClick={() => setPage('auth')}>
             Login
@@ -22,32 +20,35 @@ function App() {
     )
 
     const testButton = (
+
         <button onClick={() => {
-            console.log(logged)
-            if (sessionStorage.getItem('logged')==='true'){
-                sessionStorage.setItem('logged', false)
-            } else {
-                sessionStorage.setItem('logged',true)
-            }
+            console.log(loggedin)
+            setLoggedin(!loggedin)
         }}> Change logged status</button>
+
     )
 
     const pageContent = (
-        <div>
-            <nav>
-                <button onClick={() => setPage('tasks')}>
-                    Tasks page
-                </button>
-                {testButton}
-                {logged==='true' ? profileButton : authButton}
-            </nav>
-            {page === 'tasks' ? <TaskScreen/> : logged ? <Profile/> : <Auth/>}
-        </div>
+        <AuthProvider>
+            <AuthConsumer>
+                {({state, dispatch}) => (
+                    <div>
+                        <nav>
+                            <button onClick={() => setPage('tasks')}>
+                                Tasks page
+                            </button>
+                            {testButton}
+                            {state.auth ? profileButton : authButton}
+                        </nav>
+                        {page === 'tasks' ? <TaskScreen/> : state.auth ? <Profile/> : <Auth/>}
+                    </div>
+
+                )}
+
+            </AuthConsumer>
+        </AuthProvider>
     )
 
-    useEffect(() =>{
-        setLogged(sessionStorage.getItem('logged'))
-    })
 
     return pageContent
 }
