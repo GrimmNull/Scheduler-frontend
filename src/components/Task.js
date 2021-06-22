@@ -1,6 +1,10 @@
 import {useEffect, useState} from "react"
 import ReactDom from 'react-dom'
 import '../stylesheets/task.scss'
+import triggerAlert from "../triggerAlert";
+
+
+const userToken=sessionStorage.getItem('token')
 
 const Task = (props) => {
     const [clicked, setClicked] = useState(props.initialState)
@@ -15,7 +19,7 @@ const Task = (props) => {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    ownerId: 1,
+                    ownerToken: userToken,
                     type: 'temp',
                     parentTaskId: parentTaskId
                 })
@@ -41,6 +45,7 @@ const Task = (props) => {
                 setStartTime(document.getElementById('StartTime' + taskId).value)
                 setDeadline(document.getElementById('Deadline' + taskId).value)
                 fetch(`http://localhost:8000/tasks/${taskId}`, {
+                    token: userToken,
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -50,7 +55,7 @@ const Task = (props) => {
                         deadline: document.getElementById('Deadline' + taskId).value
                     })
                 }).then(res => res.json())
-                    .then(result => console.log(result))
+                    .then(result => triggerAlert(result.message))
                 setClicked(!clicked)
             }}>Finish edits
             </button>

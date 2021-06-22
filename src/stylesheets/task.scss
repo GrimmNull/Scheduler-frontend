@@ -1,6 +1,7 @@
 div[id^="task"] {
+  color: white;
   text-align: left;
-  border: 1px solid green;
+  border: 1px solid #00ff00;
   margin-left:1vw;
   margin-right: 1vw;
   margin-top:1vh;
@@ -8,7 +9,18 @@ div[id^="task"] {
   border-radius: 5px;
   padding-left:0.5vw;
   width:40vw;
+  position: relative;
 }
-div[id^="task"] >button {
+div[id^="task"] > button, button {
   margin-bottom: 1vh;
+  padding:1vh;
+  background: inherit;
+  color:white;
+  border:1px solid #00ff00;
+  border-radius: 7px;
+}
+
+div[id^="task"] > button:hover, button:hover{
+  cursor: pointer;
+  background: rgba(0,255,0,0.4);
 }

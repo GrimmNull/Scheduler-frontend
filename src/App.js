@@ -1,46 +1,56 @@
-import './stylesheets/App.scss';
+import './stylesheets/App.scss'
+import './stylesheets/Alert.scss'
 import TaskScreen from './components/TaskScreen.js'
 import Profile from './components/Profile.js'
 import Auth from './components/Auth.js'
-import {AuthProvider, AuthConsumer, useAuth} from './contexts/Auth.js'
-import {useContext, useEffect, useState} from 'react'
+import Homepage from './components/Homepage.js'
+import triggerAlert from './triggerAlert.js'
+import {AuthProvider, AuthConsumer} from './contexts/Auth.js'
+import {useState} from 'react'
+
+
+function getStartPage() {
+    const page = sessionStorage.getItem('currentPage')
+    if (page) {
+        return page
+    }
+    return 'tasks'
+}
+
+function setCurrentPage(setter, page) {
+    setter(page)
+    sessionStorage.setItem('currentPage', page)
+}
+
 
 function App() {
-    let [page, setPage] = useState('tasks')
-    const [loggedin, setLoggedin] = useState(false)
+    let [page, setPage] = useState(getStartPage())
     const authButton = (
-        <button onClick={() => setPage('auth')}>
+        <button onClick={() => setCurrentPage(setPage, 'auth')}>
             Login
         </button>
     )
     const profileButton = (
-        <button onClick={() => setPage('profile')}>
-            Brandon
+        <button onClick={() => setCurrentPage(setPage, 'profile')}>
+            {sessionStorage.getItem('username')}
         </button>
     )
 
-    const testButton = (
-
-        <button onClick={() => {
-            console.log(loggedin)
-            setLoggedin(!loggedin)
-        }}> Change logged status</button>
-
-    )
 
     const pageContent = (
         <AuthProvider>
             <AuthConsumer>
                 {({state, dispatch}) => (
                     <div>
-                        <nav>
-                            <button onClick={() => setPage('tasks')}>
+                        <nav id='navbar'>
+                            <button onClick={() => setCurrentPage(setPage, 'tasks')}>
                                 Tasks page
                             </button>
-                            {testButton}
+                            <button onClick={() => triggerAlert('test')}>Test Alert</button>
                             {state.auth ? profileButton : authButton}
                         </nav>
-                        {page === 'tasks' ? <TaskScreen/> : state.auth ? <Profile/> : <Auth/>}
+                        {page === 'tasks' ? state.auth ? <TaskScreen/> : <Homepage/> : state.auth ? <Profile/> :
+                            <Auth/>}
                     </div>
 
                 )}

@@ -2,13 +2,28 @@ import {createContext, useContext, useReducer} from "react";
 
 const AuthContext = createContext(false)
 
+
+function setSessionAuth(authType) {
+    sessionStorage.setItem('auth', authType)
+    return {auth: authType}
+}
+
+function getSessionAuth() {
+    const authType = sessionStorage.getItem('auth')
+    if (authType === 'true') {
+        return {auth: true}
+    }
+    return {auth: false}
+}
+
+
 function authReducer(state, action) {
     switch (action.type) {
         case 'connect': {
-            return {auth: true}
+            return setSessionAuth(true)
         }
         case 'disconnect': {
-            return {auth: false}
+            return setSessionAuth(false)
         }
         default: {
             throw new Error(`Unhandled action type: ${action.type}`)
@@ -17,7 +32,7 @@ function authReducer(state, action) {
 }
 
 function AuthProvider({children}) {
-    const [state, dispatch] = useReducer(authReducer, {auth: false})
+    const [state, dispatch] = useReducer(authReducer, getSessionAuth())
 
     const value = {state, dispatch}
 
@@ -28,7 +43,7 @@ function AuthConsumer({children}) {
     return (
         <AuthContext.Consumer>
             {context => {
-                if(context === undefined){
+                if (context === undefined) {
                     throw new Error('AuthConsumer must be used within an AuthProvider')
                 }
                 return children(context)

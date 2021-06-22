@@ -1,9 +1,36 @@
-import {useContext, useState} from "react";
-import {AuthProvider, AuthConsumer, useAuth} from "../contexts/Auth.js";
+import {useState} from "react";
+import {AuthConsumer} from "../contexts/Auth.js";
+import triggerAlert from "../triggerAlert";
 
+
+async function login(usernameField, passwordField) {
+    const response = await fetch('http://localhost:8000/users/auth/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            username: document.getElementById(usernameField).value,
+            password: document.getElementById(passwordField).value
+        })
+    })
+    if (response.status !== 200) {
+        return {
+            type: 'Error',
+            message: response.message
+        }
+    }
+    const results = await response.json()
+    console.log(results)
+    sessionStorage.setItem('userId',results.userId)
+    sessionStorage.setItem('username',results.username)
+    sessionStorage.setItem('token',results.token)
+    sessionStorage.setItem('expiresAt',results.expiresAt)
+    return {
+        type: 'Success',
+        message: 'You have successfully logged in'
+    }
+}
 
 function Auth(props) {
-    const [logged, setLogged] = useState(false)
     const [form, setForm] = useState('login')
 
     const toggleButtons = (
@@ -31,17 +58,13 @@ function Auth(props) {
                     <input id='passwordInput' type='text'/><br/>
                     <button onClick={async () => {
                         console.log(document.getElementById('passwordInput').value)
-                        const response = await fetch('http://localhost:8000/users/auth/login', {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({
-                                username: document.getElementById('usernameInput').value,
-                                password: document.getElementById('passwordInput').value
-                            })
-                        })
+                        const response = await login('usernameInput', 'passwordInput')
                         console.log(response)
-                        if (response.status === 200) {
+                        if (response.type !== 'Error') {
                             dispatch({type: 'connect'})
+                            triggerAlert(response.message)
+                        } else {
+                            triggerAlert(response.message)
                         }
                     }}>Login
                     </button>
@@ -66,7 +89,7 @@ function Auth(props) {
                 const confirmPass = document.getElementById('passwordConfirm').value
 
                 if (pass !== confirmPass) {
-                    console.log('The passwords don`t match')
+                    triggerAlert('The passwords don`t match')
                     return
                 }
 
@@ -81,9 +104,9 @@ function Auth(props) {
                 })
                 console.log(response)
                 if (response.status === 200) {
-                    console.log('Account successfully created')
+                    triggerAlert('Account successfully created')
                 } else {
-                    console.log(response.message)
+                    triggerAlert(response.message)
                 }
             }}>Register
             </button>
@@ -91,17 +114,15 @@ function Auth(props) {
     )
 
     return (
-            <AuthConsumer>
-                {({state, dispatch}) => (
-                    <div>
-                        {console.log(state)}
-                        {toggleButtons}
-                        {form === 'login' ? loginForm : registerForm}
-                        {state.auth ? <h1>You are logged</h1> : <h1>You are not logged</h1>}
-                    </div>
-                )}
+        <AuthConsumer>
+            {({state, dispatch}) => (
+                <div>
+                    {toggleButtons}
+                    {form === 'login' ? loginForm : registerForm}
+                </div>
+            )}
 
-            </AuthConsumer>
+        </AuthConsumer>
     )
 
 

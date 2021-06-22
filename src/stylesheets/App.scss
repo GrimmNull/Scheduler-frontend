@@ -2,17 +2,28 @@
   text-align: center;
 }
 
+label {
+color:white;
+}
+
+input {
+  border: 1px solid #00aa00;
+  background: inherit;
+}
+
 nav{
   padding:1vh;
   display:flex;
   flex-direction: row;
+  background: black;
 }
 
 nav > button{
   padding:1vh;
   color:white;
-  background: black;
+  background: inherit;
   border-radius: 5px;
+  border: 1px green;
   margin-right: 0;
 }
 

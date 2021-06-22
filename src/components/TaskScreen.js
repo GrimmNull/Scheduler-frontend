@@ -1,9 +1,11 @@
-import Task from "./Task";
-import {useEffect, useState} from "react";
-import ReactDom from "react-dom";
+import '../stylesheets/task.scss'
+import Task from "./Task"
+import {useEffect, useState} from "react"
+
+const userId=sessionStorage.getItem('userId')
 
 async function fetchRootTasks() {
-    const rootTasks = await (await fetch(`http://localhost:8000/users/tasks/1?rootOnly=true`, {
+    const rootTasks = await (await fetch(`http://localhost:8000/users/tasks/${userId}?rootOnly=true`, {
         method: 'GET'
     })).json()
     return rootTasks.results
@@ -18,6 +20,9 @@ async function fetchSubTasks(id) {
 
 async function addSubTasks() {
     const results = await fetchRootTasks()
+    if(!results){
+        return 'You have no tasks at this moment'
+    }
     let lista = results.map(async task => {
         const subtasks = await fetchSubTasks(task.taskId)
         return [].concat(task, subtasks)
@@ -29,6 +34,10 @@ async function addSubTasks() {
 async function fetchTasks(setter) {
     setter('')
     const promisedResults = await addSubTasks()
+    if(typeof promisedResults === "string"){
+        setter(<div id='noTasksMessage'>{promisedResults}</div>)
+        return
+    }
     Promise.all(promisedResults).then((res) => {
             const taskScreen = res.flat(1).map(task => {
                 if (task) {
@@ -45,6 +54,7 @@ async function fetchTasks(setter) {
                     return <br/>
                 }
             })
+        console.log(taskScreen)
             setter(taskScreen)
         }
     )
@@ -56,15 +66,19 @@ function TaskScreen(props) {
     const taskPage=(
         <div>
             <button onClick={() => {
-                const thisComponent = document.getElementById('taskDisplay1')
-                const newNode = document.createElement('div')
-                newNode.setAttribute('id', 'tempToReplace')
-                thisComponent.parentNode.insertBefore(newNode, thisComponent)
-                ReactDom.render(<Task
-                    initialState={true}
-                    title={''}
-                    description={''}
-                />, newNode)
+                if(!Array.isArray(rootTasks)){
+                    setRootTasks([<Task
+                        initialState={true}
+                        title={''}
+                        description={''}
+                    />])
+                } else {
+                    setRootTasks([<Task
+                        initialState={true}
+                        title={''}
+                        description={''}
+                    /> , ...rootTasks])
+                }
             }}>
                 Add task
             </button>
