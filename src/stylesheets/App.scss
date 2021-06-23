@@ -2,8 +2,9 @@
   text-align: center;
 }
 
-label {
-color:white;
+label, input {
+  color: white;
+  margin-bottom: 1.5vh;
 }
 
 input {
@@ -11,22 +12,22 @@ input {
   background: inherit;
 }
 
-nav{
-  padding:1vh;
-  display:flex;
+nav {
+  padding: 1vh;
+  display: flex;
   flex-direction: row;
   background: black;
 }
 
-nav > button{
-  padding:1vh;
-  color:white;
+nav > button {
+  padding: 1vh;
+  color: white;
   background: inherit;
   border-radius: 5px;
   border: 1px green;
   margin-right: 0;
 }
 
-nav :last-child{
-  margin-left:auto;
+nav :last-child {
+  margin-left: auto;
 }

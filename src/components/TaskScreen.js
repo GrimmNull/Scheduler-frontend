@@ -49,12 +49,13 @@ async function fetchTasks(setter) {
                         description={task.description}
                         startTime={task.startTime}
                         deadline={task.deadline}
+                        completed={task.completed}
+                        failed={task.failed}
                     />
                 } else {
                     return <br/>
                 }
             })
-        console.log(taskScreen)
             setter(taskScreen)
         }
     )

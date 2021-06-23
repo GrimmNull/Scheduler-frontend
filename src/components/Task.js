@@ -4,7 +4,7 @@ import '../stylesheets/task.scss'
 import triggerAlert from "../triggerAlert";
 
 
-const userToken=sessionStorage.getItem('token')
+const userToken = sessionStorage.getItem('token')
 
 const Task = (props) => {
     const [clicked, setClicked] = useState(props.initialState)
@@ -32,8 +32,11 @@ const Task = (props) => {
     const [description, setDescription] = useState(props.description)
     const [startTime, setStartTime] = useState(props.startTime)
     const [deadline, setDeadline] = useState(props.deadline)
+    const [completed, setCompleted] = useState(props.completed)
+    const [failed, setFailed] = useState(props.failed)
     const editMode = (
-        <div id={'taskEdit' + taskId}>
+        <div id={'taskEdit' + taskId}
+             class={`${parentTaskId !== null ? 'subtask' : 'task'} ${completed ? 'completed' : failed ? 'failed' : 'pending'}`}>
             <label> Description: </label>
             <input id={'DescriptionOfTask' + taskId} type="text" defaultValue={description}/><br/>
             <label> Start time: </label>
@@ -45,10 +48,10 @@ const Task = (props) => {
                 setStartTime(document.getElementById('StartTime' + taskId).value)
                 setDeadline(document.getElementById('Deadline' + taskId).value)
                 fetch(`http://localhost:8000/tasks/${taskId}`, {
-                    token: userToken,
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
+                        ownerToken: userToken,
                         columns: 'description startTime deadline',
                         description: document.getElementById('DescriptionOfTask' + taskId).value,
                         startTime: document.getElementById('StartTime' + taskId).value,
@@ -60,18 +63,22 @@ const Task = (props) => {
             }}>Finish edits
             </button>
             <button onClick={() => {
+                fetch()
+            }}>
+                Delete {parentTaskId !== null ? 'subtask' : 'task'}
+            </button>
+            <button onClick={() => {
                 setClicked(!clicked)
             }}>Cancel
             </button>
         </div>
     )
     const displayMode = (
-        <div id={'taskDisplay' + taskId} onClick={() => {
-            setClicked(!clicked)
-        }}>
-            <p>{description}</p>
-            <p>{startTime}</p>
-            <p>{deadline}</p>
+        <div id={'taskDisplay' + taskId}
+             class={`${parentTaskId !== null ? 'subtask' : 'task'} ${completed ? 'completed' : failed ? 'failed' : 'pending'}`}>
+            <p>Description: {description}</p>
+            <p>Start time: {startTime}</p>
+            <p>Deadline: {deadline}</p>
             {parentTaskId ? '' :
                 <button onClick={() => {
                     const thisComponent = document.getElementById('taskDisplay' + taskId)
@@ -81,11 +88,35 @@ const Task = (props) => {
                     ReactDom.render(<Task
                         initialState={true}
                         parentTaskId={taskId}
+                        completed={false}
+                        failed={false}
                         title={''}
                         description={''}
                     />, newNode)
                 }}>Add subtask
                 </button>}
+            <button onClick={() => {
+                setClicked(!clicked)
+            }}>
+                Edit {parentTaskId !== null ? 'subtask' : 'task'}
+            </button>
+            <button onClick={
+                () => {
+                    const status = !completed
+                    setCompleted(status)
+                    fetch(`http://localhost:8000/tasks/completed/${taskId}`, {
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            ownerToken: sessionStorage.getItem('token'),
+                            completed: status,
+                            root: parentTaskId === null
+                        })
+                    }).then(res => res.json())
+                        .then(result => triggerAlert(result.message))
+                }}>
+                {!completed ? parentTaskId !== null ? 'Complete subtask' : 'Complete task' : 'Not finished'}
+            </button>
         </div>
     )
 

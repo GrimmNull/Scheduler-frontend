@@ -1,18 +1,43 @@
-div[id^="task"] {
+@mixin taskComponent {
   color: white;
   text-align: left;
   border: 1px solid #00ff00;
-  margin-left:1vw;
-  margin-right: 1vw;
-  margin-top:1vh;
-  margin-bottom: 1vh;
   border-radius: 5px;
   padding-left:0.5vw;
   width:40vw;
   position: relative;
 }
+
+div[class*="task"] {
+  @include taskComponent;
+  margin-left:1vw;
+  margin-right: 1vw;
+  margin-top:3vh;
+}
+
+div[class*='subtask'] {
+  @include taskComponent;
+  text-align: left;
+  margin-left: 3vw;
+  margin-top:1vh;
+
+}
+
+div[class*='pending'], div[class*='pending'] > input {
+  border: 1px solid #ffdf00;
+}
+
+div[class*='failed'], div[class*='failed'] > input {
+  border: 1px solid #ff0000;
+}
+
+div[class*='completed'] {
+  border: 1px solid #00ff00;
+}
+
 div[id^="task"] > button, button {
   margin-bottom: 1vh;
+  margin-right: 0.5vw;
   padding:1vh;
   background: inherit;
   color:white;
@@ -20,7 +45,27 @@ div[id^="task"] > button, button {
   border-radius: 7px;
 }
 
+div[class*='pending'] > button{
+  border: 1px solid #ffdf00;
+}
+
+div[class*='failed'] > button{
+  border: 1px solid #ff0000;
+}
+
+div[class*='completed'] > button{
+  border: 1px solid #00ff00;
+}
+
 div[id^="task"] > button:hover, button:hover{
   cursor: pointer;
   background: rgba(0,255,0,0.4);
+}
+
+div[class*='pending'] > button:hover{
+  background: rgba(255, 223, 0,0.4);
+}
+
+div[class*='failed'] > button:hover{
+  background: rgba(255, 0, 0,0.4);
 }
