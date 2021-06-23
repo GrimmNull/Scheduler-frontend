@@ -1,4 +1,4 @@
-body {
+main {
   background:linear-gradient(0deg, rgba(0, 0, 50, 0.8), rgba(0, 0, 50, 0.8)), url(../photos/notebook.jpg);
   background-size:cover;
   margin: 0;

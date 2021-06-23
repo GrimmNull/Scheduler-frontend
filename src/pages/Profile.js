@@ -1,4 +1,5 @@
-import triggerAlert from "../triggerAlert";
+import * as ReactDOM from "react-dom";
+import {Alert} from "antd";
 
 
 function Profile(props){
@@ -15,7 +16,10 @@ function Profile(props){
         sessionStorage.removeItem('token')
         sessionStorage.removeItem('expiresAt')
         sessionStorage.removeItem('auth')
-        triggerAlert('You have successfully logged out')
+        ReactDOM.render(
+            <Alert message="You have successfully logged out" type="success" />,
+            document.getElementById('container'),
+        );
     }}>
         Logout
     </button>

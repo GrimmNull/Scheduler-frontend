@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react"
 import ReactDom from 'react-dom'
 import '../stylesheets/task.scss'
-import triggerAlert from "../triggerAlert";
+import * as ReactDOM from "react-dom";
+import {Alert} from "antd";
 
 
 const userToken = sessionStorage.getItem('token')
@@ -58,7 +59,10 @@ const Task = (props) => {
                         deadline: document.getElementById('Deadline' + taskId).value
                     })
                 }).then(res => res.json())
-                    .then(result => triggerAlert(result.message))
+                    .then(result => ReactDOM.render(
+                        <Alert message={result.message} type="success" />,
+                        document.getElementById('container'),
+                    ))
                 setClicked(!clicked)
             }}>Finish edits
             </button>
@@ -113,7 +117,10 @@ const Task = (props) => {
                             root: parentTaskId === null
                         })
                     }).then(res => res.json())
-                        .then(result => triggerAlert(result.message))
+                        .then(result => ReactDOM.render(
+                            <Alert message={result.message} type="success" />,
+                            document.getElementById('container'),
+                        ))
                 }}>
                 {!completed ? parentTaskId !== null ? 'Complete subtask' : 'Complete task' : 'Not finished'}
             </button>

@@ -11,23 +11,3 @@ input {
   border: 1px solid #00aa00;
   background: inherit;
 }
-
-nav {
-  padding: 1vh;
-  display: flex;
-  flex-direction: row;
-  background: black;
-}
-
-nav > button {
-  padding: 1vh;
-  color: white;
-  background: inherit;
-  border-radius: 5px;
-  border: 1px green;
-  margin-right: 0;
-}
-
-nav :last-child {
-  margin-left: auto;
-}

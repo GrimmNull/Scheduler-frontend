@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {AuthConsumer} from "../contexts/Auth.js";
-import triggerAlert from "../triggerAlert";
-
+import { Alert } from 'antd';
+import * as ReactDOM from "react-dom";
 
 async function login(usernameField, passwordField) {
     const response = await fetch('http://localhost:8000/users/auth/login', {
@@ -62,9 +62,15 @@ function Auth(props) {
                         console.log(response)
                         if (response.type !== 'Error') {
                             dispatch({type: 'connect'})
-                            triggerAlert(response.message)
+                            ReactDOM.render(
+                                    <Alert message={response.message} type="success" />,
+                                document.getElementById('container'),
+                            );
                         } else {
-                            triggerAlert(response.message)
+                            ReactDOM.render(
+                                <Alert message={response.message} type="error" />,
+                                document.getElementById('container'),
+                            );
                         }
                     }}>Login
                     </button>
@@ -89,7 +95,10 @@ function Auth(props) {
                 const confirmPass = document.getElementById('passwordConfirm').value
 
                 if (pass !== confirmPass) {
-                    triggerAlert('The passwords don`t match')
+                    ReactDOM.render(
+                        <Alert message='The passwords don`t match' type="error" />,
+                        document.getElementById('container'),
+                    )
                     return
                 }
 
@@ -104,9 +113,15 @@ function Auth(props) {
                 })
                 console.log(response)
                 if (response.status === 200) {
-                    triggerAlert('Account successfully created')
+                    ReactDOM.render(
+                        <Alert message='Account successfully created' type="success" />,
+                        document.getElementById('container')
+                    )
                 } else {
-                    triggerAlert(response.message)
+                    ReactDOM.render(
+                        <Alert message={response.message} type="warning" />,
+                        document.getElementById('container')
+                    )
                 }
             }}>Register
             </button>

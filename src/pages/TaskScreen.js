@@ -1,5 +1,5 @@
 import '../stylesheets/task.scss'
-import Task from "./Task"
+import Task from "../components/Task"
 import {useEffect, useState} from "react"
 
 const userId=sessionStorage.getItem('userId')

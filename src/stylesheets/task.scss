@@ -8,6 +8,10 @@
   position: relative;
 }
 
+div {
+  color:white;
+}
+
 div[class*="task"] {
   @include taskComponent;
   margin-left:1vw;
