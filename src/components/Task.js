@@ -131,10 +131,24 @@ const Task = (props) => {
                 const newNode=document.createElement('div')
                 main.parentNode.insertBefore(newNode,main)
 
+                const startTime=document.getElementById('StartTime' + taskId).value,
+                    deadline=document.getElementById('Deadline' + taskId).value,
+                    description=document.getElementById('DescriptionOfTask' + taskId).value
+
+                const dataStart=new Date(startTime),
+                    dataDeadline=new Date(deadline)
+
+                if(dataStart>dataDeadline){
+                    ReactDOM.render(
+                        <Alert message='The deadline can`t be before the start' type="success" closeText="Close Now"/>, newNode,
+                    )
+                    return
+                }
+
                 //facem update-ul pe frontend
-                setDescription(document.getElementById('DescriptionOfTask' + taskId).value)
-                setStartTime(document.getElementById('StartTime' + taskId).value)
-                setDeadline(document.getElementById('Deadline' + taskId).value)
+                setDescription(description)
+                setStartTime(startTime)
+                setDeadline(deadline)
 
                 //dupa care trimitem request-ul catre backend
                 //Motivatia este ca daca asteptam pana primim raspuns interfata se poate simti un pic unresponsive
@@ -145,9 +159,9 @@ const Task = (props) => {
                     body: JSON.stringify({
                         ownerToken: userToken,
                         columns: 'description startTime deadline',
-                        description: document.getElementById('DescriptionOfTask' + taskId).value,
-                        startTime: document.getElementById('StartTime' + taskId).value,
-                        deadline: document.getElementById('Deadline' + taskId).value
+                        description: description,
+                        startTime: startTime,
+                        deadline: deadline
                     })
                 }).then(res => res.json())
                     .then(result => {
