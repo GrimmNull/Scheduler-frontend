@@ -43,6 +43,8 @@ function Profile(props) {
                     );
                     dispatch({type: 'disconnect'})
                     history.push('/Homepage')
+                    sessionStorage.setItem('currentPage', 1)
+                    window.location.reload()
                 }}>
                     Logout
                 </button>

@@ -78,6 +78,7 @@ function Auth(props) {
                             );
                             //redirectionam user-ul catre homepage ca sa nu ramana pe ecranul de logare/inregistrare
                             history.push('/Homepage')
+                            sessionStorage.setItem('currentPage', 1)
                             window.location.reload()
                         } else {
                             ReactDOM.render(
@@ -145,6 +146,7 @@ function Auth(props) {
                                     newNode,
                                 );
                                 history.push('/Homepage')
+                                sessionStorage.setItem('currentPage', 1)
                                 window.location.reload()
                             } else {
                                 ReactDOM.render(

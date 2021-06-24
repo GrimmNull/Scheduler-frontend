@@ -11,10 +11,21 @@ import {useEffect, useState} from 'react'
 
 const {Sider, Content} = Layout;
 
+function getStartPage() {
+    const page = sessionStorage.getItem('currentPage')
+    console.log(page)
+    if (page) {
+        return page
+    }
+    return 1
+}
+function setCurrentPage(page) {
+    sessionStorage.setItem('currentPage', page)
+}
+
 
 function App(props) {
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
 
     //verificam daca token-ul userului a expirat sau nu
     useEffect(() => {
@@ -47,12 +58,13 @@ function App(props) {
                             >
                                 <Menu
                                     theme="dark"
-                                    defaultSelectedKeys={[`1`]}
+                                    defaultSelectedKeys={[`${getStartPage()}`]}
                                     mode="inline"
                                 >
                                     <Menu.Item
                                         key="1"
                                         icon={<DesktopOutlined/>}
+                                        onClick={() => setCurrentPage(1)}
                                     >
                                         <Link to='/homepage'>Homepage</Link>
                                     </Menu.Item>
@@ -60,6 +72,7 @@ function App(props) {
                                         state.auth ? <Menu.Item
                                             key="2"
                                             icon={<FormOutlined/>}
+                                            onClick={() => setCurrentPage(2)}
                                         >
                                             <Link to='/TaskScreen'>Tasks</Link>
                                         </Menu.Item> : ''}
@@ -67,6 +80,7 @@ function App(props) {
                                     <Menu.Item
                                         key="3"
                                         icon={<IdcardOutlined/>}
+                                        onClick={() => setCurrentPage(3)}
                                     >
                                         {state.auth ? <Link to='/Profile'> {sessionStorage.getItem('username')}</Link> :
                                             <Link to='/Auth'> Login</Link>}
