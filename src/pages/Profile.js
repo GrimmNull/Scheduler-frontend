@@ -87,12 +87,10 @@ function Profile(props) {
                 const main = document.getElementById('profilePageStart')
                 const newNode = document.createElement('div')
                 main.parentNode.insertBefore(newNode, main)
-                if(infoToChange==='password'){
-                    const pass=document.getElementById('editField2').value,
-                        confPass=document.getElementById('editField3').value
-                    console.log(pass)
-                    console.log(confPass)
-                    if(pass!==confPass){
+                if (infoToChange === 'password') {
+                    const pass = document.getElementById('editField2').value,
+                        confPass = document.getElementById('editField3').value
+                    if (pass !== confPass) {
                         ReactDOM.render(
                             <Alert message='Passwords don`t match' type="error" closeText='Close now'/>,
                             newNode,
@@ -100,7 +98,7 @@ function Profile(props) {
                         return
                     }
                 }
-                const data= infoToChange === 'password' ? {
+                const data = infoToChange === 'password' ? {
                         ownerToken: sessionStorage.getItem('token'),
                         password: document.getElementById('editField2').value
                     }
@@ -120,15 +118,15 @@ function Profile(props) {
                     body: JSON.stringify(data)
                 }).then(res => res.json())
                     .then(result => {
-                        if(result.message.includes('successfully')){
+                        if (result.message.includes('successfully')) {
                             ReactDOM.render(
                                 <Alert message={result.message} type="success" closeText='Close now'/>,
                                 newNode,
                             );
-                            if(infoToChange!=='password'){
-                                sessionStorage.setItem(infoToChange,document.getElementById('editField1').value)
+                            if (infoToChange !== 'password') {
+                                sessionStorage.setItem(infoToChange, document.getElementById('editField1').value)
                             } else {
-                                sessionStorage.setItem(infoToChange,document.getElementById('editField2').value)
+                                sessionStorage.setItem(infoToChange, document.getElementById('editField2').value)
                             }
                             window.location.reload()
                         } else {

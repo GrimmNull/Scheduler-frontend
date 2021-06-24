@@ -8,8 +8,6 @@ import {Alert} from "antd";
 const userToken = sessionStorage.getItem('token')
 
 
-//as recomanda citirea de jos in sus
-
 const Task = (props) => {
     const [clicked, setClicked] = useState(props.initialState)  //starea care ne spune pe ce ecran ar trebui sa fim
     const parentTaskId = props.parentTaskId
@@ -39,7 +37,7 @@ const Task = (props) => {
     const [startTime, setStartTime] = useState(props.startTime)
     const [deadline, setDeadline] = useState(props.deadline)
     const [completed, setCompleted] = useState(props.completed)     //descrie daca un task/subtask a fost finalizat sau nu
-    const [failed,setFailed] = useState(props.failed)              //descrie daca un task/subtask a fost ratat sau nu
+    const [failed, setFailed] = useState(props.failed)              //descrie daca un task/subtask a fost ratat sau nu
 
     //ecranul pentru detalii este alcatuit in principal din informatiile despre task-uri/subtask-uri si o serie de butoane
     //prima data verificam daca este task sau subtask, iar apoi daca acesta a fost finalizat sau ratat
@@ -78,9 +76,9 @@ const Task = (props) => {
                 () => {
                     //in functie de rezultatul actiunilor, user-ul va primi o notificare de tip alert cu un mesaj sugestiv. Notificarea aceasta o vom insera la inceputul
                     //paginii, motiv pentru care ne pregatim din start un nod unde sa randam notificarea
-                    const main=document.getElementById('taskPageStart')
-                    const newNode=document.createElement('div')
-                    main.parentNode.insertBefore(newNode,main)
+                    const main = document.getElementById('taskPageStart')
+                    const newNode = document.createElement('div')
+                    main.parentNode.insertBefore(newNode, main)
 
                     const status = !completed
                     setCompleted(status)
@@ -94,7 +92,7 @@ const Task = (props) => {
                         })
                     }).then(res => res.json())
                         .then(result => {
-                            if(result.message.includes('successfully')){
+                            if (result.message.includes('successfully')) {
                                 //in caz ca task-ul/subtask-ul a fost updatat cu succes reincarcam pagina pentru a face rost din nou de task-uri de pe backend
                                 //motivul pentru care facem asta este ca daca toate subtask-urile au fost completate, atunci si task-ul principal a fost terminat
                                 //daca task-ul principal a fost terminat, dar vrem sa mai facemm ceva la el si ii modificam status-ul in neterminat,
@@ -127,20 +125,21 @@ const Task = (props) => {
             <label> Deadline:</label>
             <input id={'Deadline' + taskId} type="datetime-local" defaultValue={deadline}/><br/>
             <button onClick={() => {
-                const main=document.getElementById('taskPageStart')
-                const newNode=document.createElement('div')
-                main.parentNode.insertBefore(newNode,main)
+                const main = document.getElementById('taskPageStart')
+                const newNode = document.createElement('div')
+                main.parentNode.insertBefore(newNode, main)
 
-                const startTime=document.getElementById('StartTime' + taskId).value,
-                    deadline=document.getElementById('Deadline' + taskId).value,
-                    description=document.getElementById('DescriptionOfTask' + taskId).value
+                const startTime = document.getElementById('StartTime' + taskId).value,
+                    deadline = document.getElementById('Deadline' + taskId).value,
+                    description = document.getElementById('DescriptionOfTask' + taskId).value
 
-                const dataStart=new Date(startTime),
-                    dataDeadline=new Date(deadline)
+                const dataStart = new Date(startTime),
+                    dataDeadline = new Date(deadline)
 
-                if(dataStart>dataDeadline){
+                if (dataStart > dataDeadline) {
                     ReactDOM.render(
-                        <Alert message='The deadline can`t be before the start' type="success" closeText="Close Now"/>, newNode,
+                        <Alert message='The deadline can`t be before the start' type="success"
+                               closeText="Close Now"/>, newNode,
                     )
                     return
                 }
@@ -165,7 +164,7 @@ const Task = (props) => {
                     })
                 }).then(res => res.json())
                     .then(result => {
-                        if(result.message.includes('successfully')){
+                        if (result.message.includes('successfully')) {
                             ReactDOM.render(
                                 <Alert message={result.message} type="success" closeText="Close Now"/>, newNode,
                             )
@@ -180,9 +179,9 @@ const Task = (props) => {
             }}>Finish edits
             </button>
             <button onClick={() => {
-                const main=document.getElementById('taskPageStart')
-                const newNode=document.createElement('div')
-                main.parentNode.insertBefore(newNode,main)
+                const main = document.getElementById('taskPageStart')
+                const newNode = document.createElement('div')
+                main.parentNode.insertBefore(newNode, main)
 
                 fetch(`http://localhost:8000/tasks/${taskId}`, {
                     method: 'DELETE',
@@ -192,7 +191,7 @@ const Task = (props) => {
                     })
                 }).then(res => res.json())
                     .then(result => {
-                        if(result.message.includes('successfully')){
+                        if (result.message.includes('successfully')) {
                             window.location.reload()
                             ReactDOM.render(
                                 <Alert message={result.message} type="success" closeText="Close Now"/>, newNode,

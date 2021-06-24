@@ -1,58 +1,58 @@
 $duration: 0.5s;
 
-#homepageScreen{
-  margin:auto;
-  width:70%;
+#homepageScreen {
+  margin: auto;
+  width: 70%;
 }
 
-#motImage{
+#motImage {
   width: 80%;
   margin-right: 3vw;
-  transition:width $duration;
+  transition: width $duration;
 }
 
-#motImage.next{
-  width:0px;
+#motImage.next {
+  width: 0px;
 }
 
-#motTitle{
-  margin-left:5vw;
+#motTitle {
+  margin-left: 5vw;
   margin-top: 10vh;
-  color:white;
+  color: white;
   text-wrap: normal;
-  transition:font-size $duration;
+  transition: font-size $duration;
 }
 
-#motTitle.next{
-  font-size:0px;
+#motTitle.next {
+  font-size: 0px;
 }
 
-#descParagraph{
-  margin-left:8vw;
+#descParagraph {
+  margin-left: 8vw;
   margin-top: 2vh;
-  color:white;
+  color: white;
   text-wrap: normal;
-  transition:font-size $duration;
+  transition: font-size $duration;
 }
 
-#descParagraph.next{
-  font-size:0px;
+#descParagraph.next {
+  font-size: 0px;
 }
 
 
-@media only screen and (max-width: 600px){
+@media only screen and (max-width: 600px) {
   main {
-    zoom:1.5;
+    zoom: 1.5;
   }
-  #motImage{
-    width:100%;
-    margin-right:0;
-    margin-top:5vh;
+  #motImage {
+    width: 100%;
+    margin-right: 0;
+    margin-top: 5vh;
   }
-  #motTitle{
-    margin-top:5vh;
+  #motTitle {
+    margin-top: 5vh;
   }
-  #descParagraph{
-    margin-left:0vw;
+  #descParagraph {
+    margin-left: 0vw;
   }
 }

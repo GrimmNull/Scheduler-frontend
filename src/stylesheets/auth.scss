@@ -2,21 +2,21 @@
   display: flex;
   flex-direction: column;
   border: 1px solid coral;
-  background:linear-gradient(0deg, rgba(0, 0, 50, 0.6), rgba(0, 0, 50, 0.6));
+  background: linear-gradient(0deg, rgba(0, 0, 50, 0.6), rgba(0, 0, 50, 0.6));
   margin: auto;
   border-radius: 9px;
   width: 50%;
   height: 70%;
 }
 
-#authMenu > .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled){
+#authMenu > .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
   background: coral !important;
-  border:1px solid coral !important;
+  border: 1px solid coral !important;
 }
 
 .ant-radio-button-wrapper {
   background: linear-gradient(0deg, rgba(0, 0, 50, 0.6), rgba(0, 0, 50, 0.6)) !important;
-  color:white !important;
+  color: white !important;
 }
 
 #authMenu > *:not(button) {
@@ -29,7 +29,7 @@
   margin-top: 1vh;
 }
 
-#authMenu > #loginForm, #authMenu > #registerForm{
+#authMenu > #loginForm, #authMenu > #registerForm {
   align-items: revert;
 }
 
@@ -39,20 +39,19 @@
 
 #authMenu > #loginForm, #authMenu > #registerForm {
   font-size: 1vw;
-  display:flex;
+  display: flex;
   flex-direction: column;
 }
 
 
-
 #authMenu > #loginForm > label, #authMenu > #loginForm > input, #authMenu > #registerForm > label, #authMenu > #registerForm > input {
-    margin-bottom:0;
+  margin-bottom: 0;
 }
 
-#authMenu > #loginForm :last-child, #authMenu > #registerForm  :last-child{
-  margin-left:auto;
+#authMenu > #loginForm :last-child, #authMenu > #registerForm :last-child {
+  margin-left: auto;
   margin-right: 0;
-  margin-top:1vh;
+  margin-top: 1vh;
 }
 
 #authMenu > button {
@@ -61,39 +60,39 @@
 }
 
 
-@media only screen and (max-width: 600px){
+@media only screen and (max-width: 600px) {
   main {
-    zoom:1.5;
+    zoom: 1.5;
   }
   #authMenu {
-    width:90%;
+    width: 90%;
   }
 
   #authMenu > .ant-radio-button-wrapper > .ant-radio-button {
-    width:40% !important;
+    width: 40% !important;
   }
 
   .ant-radio-group-solid .ant-radio-button-wrapper {
-    width:40% !important;
+    width: 40% !important;
     font-size: 1.5vh;
   }
 }
 
-@media only screen and (max-width: 400px){
+@media only screen and (max-width: 400px) {
   main {
-    zoom:1.5;
+    zoom: 1.5;
   }
   #authMenu {
-    width:90%;
+    width: 90%;
   }
 
-  #loginForm{
-    width:90%;
+  #loginForm {
+    width: 90%;
   }
 
   #loginForm > button {
-    width:5vh;
-    font-size:1vh;
+    width: 5vh;
+    font-size: 1vh;
   }
 
   #loginForm > label {
@@ -101,17 +100,17 @@
   }
 
   #loginForm > input {
-    height:2vh;
+    height: 2vh;
     font-size: 1vh;
   }
 
-  #registerForm{
-    width:90%;
+  #registerForm {
+    width: 90%;
   }
 
   #registerForm > button {
-    width:5vh;
-    font-size:1vh;
+    width: 5vh;
+    font-size: 1vh;
   }
 
   #registerForm > label {
@@ -119,7 +118,7 @@
   }
 
   #registerForm > input {
-    height:2vh;
+    height: 2vh;
     font-size: 1vh;
   }
 }

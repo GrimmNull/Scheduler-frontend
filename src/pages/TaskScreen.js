@@ -1,10 +1,10 @@
 import '../stylesheets/task.scss'
 import Task from "../components/Task"
 import {useEffect, useState} from "react"
-import { Button} from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import {Button} from 'antd';
+import {PlusOutlined} from '@ant-design/icons';
 
-const userId=sessionStorage.getItem('userId')
+const userId = sessionStorage.getItem('userId')
 
 
 //luam prima data doar task-urile principale
@@ -28,7 +28,7 @@ async function fetchSubTasks(id) {
 //iar la final le unim intr-o singura lista
 async function addSubTasks() {
     const results = await fetchRootTasks()
-    if(!results){
+    if (!results) {
         return 'You have no tasks at this moment'
     }
     let lista = results.map(async task => {
@@ -45,7 +45,7 @@ async function addSubTasks() {
 async function fetchTasks(setter) {
     setter('')
     const promisedResults = await addSubTasks()
-    if(typeof promisedResults === "string"){
+    if (typeof promisedResults === "string") {
         setter(<div id='noTasksMessage'>{promisedResults}</div>)
         return
     }
@@ -76,11 +76,11 @@ async function fetchTasks(setter) {
 
 function TaskScreen(props) {
     const [rootTasks, setRootTasks] = useState('')
-    const taskPage=(
+    const taskPage = (
         <div id='taskPageStart'>
-            <Button id='addTaskBtn' type="primary" shape="round" icon={<PlusOutlined />} size={'large'} onClick={() => {
+            <Button id='addTaskBtn' type="primary" shape="round" icon={<PlusOutlined/>} size={'large'} onClick={() => {
                 //verificam daca avem deja un task existent sau este primul pe care il adaugam in lista
-                if(!Array.isArray(rootTasks)){
+                if (!Array.isArray(rootTasks)) {
                     setRootTasks([<Task
                         initialState={true}
                         title={''}
@@ -91,7 +91,7 @@ function TaskScreen(props) {
                         initialState={true}
                         title={''}
                         description={''}
-                    /> , ...rootTasks])
+                    />, ...rootTasks])
                 }
             }}>
                 Add task
