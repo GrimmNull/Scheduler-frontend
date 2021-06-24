@@ -1,0 +1,103 @@
+main {
+  display:flex;
+}
+
+main > * {
+  color:white
+}
+
+#profileScreen, #editScreen {
+  display:flex;
+  flex-direction: column;
+  border:1px solid coral;
+  border-radius: 9px;
+  width: 50%;
+  height: 50%;
+  margin: auto;
+  background:linear-gradient(0deg, rgba(0, 0, 50, 0.6), rgba(0, 0, 50, 0.6));
+}
+
+
+#logoutBtn, #changePassBtn, #cancelEditBtn, #submitBtn {
+  border:1px solid coral;
+  width:40%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#logoutBtn:hover, #changePassBtn:hover, #cancelEditBtn:hover, #submitBtn:hover {
+  background: coral;
+}
+
+#profileScreen > *:not(#logoutBtn,#changePassBtn){
+  margin-left: 1vw;
+}
+
+#profileScreen :first-child {
+  margin-top:2vh;
+}
+
+#editScreen :first-child {
+  margin-top:2vh;
+}
+
+#editScreen > *:not(button){
+  margin-left: 1vw;
+}
+
+#editScreen > button:first-of-type {
+  margin-top:5vh;
+}
+
+#editScreen > button {
+  margin-bottom: 1vh;
+}
+
+#editScreen > label {
+  margin-bottom: 0;
+  font-size:2vh;
+}
+
+#editScreen > input {
+  width:50%;
+  border:1px solid coral;
+}
+
+#infos > h2 {
+  color:white
+}
+
+#infos > h2:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 600px){
+  main {
+    zoom:1.5;
+  }
+  #profileScreen, #editScreen {
+    width:90%;
+    height: 80%;
+  }
+  #infos > h2 {
+    font-size: 3vw;
+  }
+
+  #logoutBtn, #changePassBtn, #cancelEditBtn, #submitBtn {
+    width:70%;
+  }
+}
+
+@media only screen and (max-width: 400px){
+  #logoutBtn, #changePassBtn, #cancelEditBtn, #submitBtn {
+    width:90%;
+  }
+  #editScreen > button:first-of-type {
+    margin-top:2vh;
+  }
+
+  #editScreen > input {
+    width:90%;
+  }
+}

@@ -1,34 +1,38 @@
 import './stylesheets/App.scss'
-import './stylesheets/Alert.scss'
 import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
-import { DesktopOutlined, FormOutlined } from '@ant-design/icons';
+import { DesktopOutlined, FormOutlined, IdcardOutlined } from '@ant-design/icons';
 import TaskScreen from './pages/TaskScreen.js'
 import Profile from './pages/Profile.js'
 import Auth from './pages/Auth.js'
 import Homepage from './pages/Homepage.js'
 import {AuthProvider, AuthConsumer} from './contexts/Auth.js'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 
 const { Sider, Content } = Layout;
 
-function getStartPage() {
-    const page = sessionStorage.getItem('currentPage')
-    if (page) {
-        return page
-    }
-    return 'tasks'
-}
-
-function setCurrentPage(setter, page) {
-    setter(page)
-    sessionStorage.setItem('currentPage', page)
-}
 
 function App(props) {
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
+
+    //verificam daca token-ul userului a expirat sau nu
+    useEffect( () => {
+            const data=new Date(sessionStorage.getItem('expiresAt'))
+            const data2=new Date()
+        if(data<data2){
+            sessionStorage.removeItem('username')
+            sessionStorage.removeItem('email')
+            sessionStorage.removeItem('userId')
+            sessionStorage.removeItem('token')
+            sessionStorage.removeItem('expiresAt')
+            sessionStorage.removeItem('auth')
+        }
+        },[])
+
+    //Pagina principala este de fapt sidebar-ul si din el selectam pagina pe care s-o incarcam
     return (
+        //utilizam un context de autentificare pentru a evita sa folosim redux :D
         <AuthProvider>
             <AuthConsumer>
                 {({state, dispatch}) => (
@@ -43,7 +47,7 @@ function App(props) {
                             >
                                 <Menu
                                     theme="dark"
-                                    defaultSelectedKeys={[`${getStartPage()}`]}
+                                    defaultSelectedKeys={[`1`]}
                                     mode="inline"
                                 >
                                     <Menu.Item
@@ -52,15 +56,17 @@ function App(props) {
                                     >
                                         <Link to='/homepage'>Homepage</Link>
                                     </Menu.Item>
-                                    <Menu.Item
+                                    {//ne asiguram mai intai ca avem un user logat inainte de a-i permite accesul la pagina de task-uri
+                                        state.auth ?  <Menu.Item
                                         key="2"
                                         icon={<FormOutlined />}
                                     >
                                         <Link to='/TaskScreen'>Tasks</Link>
-                                    </Menu.Item>
+                                    </Menu.Item> : ''}
+
                                     <Menu.Item
                                         key="3"
-                                        icon={<DesktopOutlined />}
+                                        icon={<IdcardOutlined />}
                                     >
                                         {state.auth ? <Link to='/Profile'> {sessionStorage.getItem('username')}</Link> : <Link to='/Auth'> Login</Link>}
                                     </Menu.Item>

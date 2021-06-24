@@ -3,13 +3,19 @@
   text-align: left;
   border: 1px solid #00ff00;
   border-radius: 5px;
-  padding-left:0.5vw;
-  width:40vw;
+  padding-left: 0.5vw;
+  width: 40vw;
   position: relative;
+  background: linear-gradient(0deg, rgba(0, 0, 50, 0.6), rgba(0, 0, 50, 0.6));
 }
 
 div {
   color:white;
+}
+
+div[class*='task'] > label, div[class*='task'] > input {
+  color: white;
+  margin-bottom: 1.5vh;
 }
 
 div[class*="task"] {
@@ -72,4 +78,22 @@ div[class*='pending'] > button:hover{
 
 div[class*='failed'] > button:hover{
   background: rgba(255, 0, 0,0.4);
+}
+
+#addTaskBtn{
+  margin-top:1vh;
+  margin-left:1vw;
+}
+
+
+@media only screen and (max-width: 600px){
+  main {
+    zoom:1.3;
+  }
+  div[class*="task"]{
+    width:50vw;
+  }
+  div[class*='task'] > input {
+    width:45vw;
+  }
 }

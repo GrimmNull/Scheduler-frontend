@@ -1,8 +1,11 @@
 import {useState} from "react";
 import {AuthConsumer} from "../contexts/Auth.js";
-import { Alert } from 'antd';
+import {Alert, Radio} from 'antd';
 import * as ReactDOM from "react-dom";
+import {useHistory} from 'react-router-dom'
+import '../stylesheets/auth.scss'
 
+//am extras functia care face apelul catre backend pentru verificarea datelor ca sa putem loga userul imediat cum isi face cont
 async function login(usernameField, passwordField) {
     const response = await fetch('http://localhost:8000/users/auth/login', {
         method: 'POST',
@@ -18,12 +21,13 @@ async function login(usernameField, passwordField) {
             message: response.message
         }
     }
+    //daca nu avem nicio eroare, atunci salvam in sessionStorage informatiile despre user
     const results = await response.json()
-    console.log(results)
-    sessionStorage.setItem('userId',results.userId)
-    sessionStorage.setItem('username',results.username)
-    sessionStorage.setItem('token',results.token)
-    sessionStorage.setItem('expiresAt',results.expiresAt)
+    sessionStorage.setItem('userId', results.userId)
+    sessionStorage.setItem('username', results.username)
+    sessionStorage.setItem('email', results.email)
+    sessionStorage.setItem('token', results.token)
+    sessionStorage.setItem('expiresAt', results.expiresAt)
     return {
         type: 'Success',
         message: 'You have successfully logged in'
@@ -32,44 +36,53 @@ async function login(usernameField, passwordField) {
 
 function Auth(props) {
     const [form, setForm] = useState('login')
+    const history = useHistory()
 
-    const toggleButtons = (
-        <div>
-            <button id='loginBtn' onClick={() => {
+    //componenta din antd ca sa comutam intre ecranul de logare si cel de inregistrare
+    const toggles = (
+        <Radio.Group id='selector' defaultValue="a" buttonStyle="solid">
+            <Radio.Button onClick={() => {
                 setForm('login')
-            }}>
-                Login
-            </button>
-            <button id='registerBtn' onClick={() => {
+            }} value="a">Login</Radio.Button>
+            <Radio.Button onClick={() => {
                 setForm('register')
-            }}>
-                Register
-            </button>
-        </div>
+            }} value="b">Register</Radio.Button>
+
+        </Radio.Group>
     )
 
+    //folosim aici contextul de autentificare ca sa spunem si restul componentelor (in principal doar navbar-ului) daca un user a reusit sa se logheze sau nu
     const loginForm = (
         <AuthConsumer>
             {({state, dispatch}) => (
-                <div>
+                <div id='loginForm'>
                     <label>Username:</label><br/>
                     <input id='usernameInput' type='text'/><br/>
                     <label>Password:</label><br/>
                     <input id='passwordInput' type='text'/><br/>
                     <button onClick={async () => {
-                        console.log(document.getElementById('passwordInput').value)
+                        //chemam functia de login si verificam datele utilizatorului
                         const response = await login('usernameInput', 'passwordInput')
-                        console.log(response)
+
+                        //ne pregatim din nou un loc unde sa inseram mesajul
+                        const main = document.getElementById('authMenu')
+                        const newNode = document.createElement('div')
+                        main.parentNode.insertBefore(newNode, main)
+
                         if (response.type !== 'Error') {
+                            //daca totul e bine, updatam contextul deoarece avem un user logat
                             dispatch({type: 'connect'})
                             ReactDOM.render(
-                                    <Alert message={response.message} type="success" />,
-                                document.getElementById('container'),
+                                <Alert message={response.message} type="success" closeText='Close now'/>,
+                                newNode,
                             );
+                            //redirectionam user-ul catre homepage ca sa nu ramana pe ecranul de logare/inregistrare
+                            history.push('/Homepage')
+                            window.location.reload()
                         } else {
                             ReactDOM.render(
-                                <Alert message={response.message} type="error" />,
-                                document.getElementById('container'),
+                                <Alert message={response.message} type="error" closeText='Close now'/>,
+                                newNode,
                             );
                         }
                     }}>Login
@@ -80,66 +93,87 @@ function Auth(props) {
 
     )
 
+    //form-ul de inregistrare merge in principal cam la fel cu cel de login, doar ca mai avem etapa in care adaugam un nou cont la baza de date
     const registerForm = (
-        <div>
-            <label>Username:</label><br/>
-            <input id='usernameRegister' type='text'/><br/>
-            <label>Email:</label><br/>
-            <input id='emailRegister' type='text'/><br/>
-            <label>Password:</label><br/>
-            <input id='passwordRegister' type='text'/><br/>
-            <label>Confirm password:</label><br/>
-            <input id='passwordConfirm' type='text'/><br/>
-            <button onClick={async () => {
-                const pass = document.getElementById('passwordRegister').value
-                const confirmPass = document.getElementById('passwordConfirm').value
+        <AuthConsumer>
+            {({state, dispatch}) => (
+                <div id='registerForm'>
+                    <label>Username:</label><br/>
+                    <input id='usernameRegister' type='text'/><br/>
+                    <label>Email:</label><br/>
+                    <input id='emailRegister' type='text'/><br/>
+                    <label>Password:</label><br/>
+                    <input id='passwordRegister' type='text'/><br/>
+                    <label>Confirm password:</label><br/>
+                    <input id='passwordConfirm' type='text'/><br/>
+                    <button onClick={async () => {
+                        const main = document.getElementById('authMenu')
+                        const newNode = document.createElement('div')
+                        main.parentNode.insertBefore(newNode, main)
 
-                if (pass !== confirmPass) {
-                    ReactDOM.render(
-                        <Alert message='The passwords don`t match' type="error" />,
-                        document.getElementById('container'),
-                    )
-                    return
-                }
+                        //ne asiguram mai intai ca cele doua parole coincid
+                        const pass = document.getElementById('passwordRegister').value
+                        const confirmPass = document.getElementById('passwordConfirm').value
+                        if (pass !== confirmPass) {
+                            ReactDOM.render(
+                                <Alert message='The passwords don`t match' type="error"
+                                       closeText="Close Now"/>, newNode,
+                            )
+                            return
+                        }
+                        const response = await fetch('http://localhost:8000/users', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                username: document.getElementById('usernameRegister').value,
+                                email: document.getElementById('emailRegister').value,
+                                password: document.getElementById('passwordRegister').value
+                            })
+                        })
+                        //daca a fost creat contul, continuam cu partea de logare a user-ului
+                        if (response.status === 200) {
+                            ReactDOM.render(
+                                <Alert message='Account successfully created' type="success"
+                                       closeText="Close Now"/>, newNode,
+                            )
+                            const response = await login('usernameRegister', 'passwordRegister')
+                            if (response.type !== 'Error') {
+                                dispatch({type: 'connect'})
+                                window.location.reload()
+                                ReactDOM.render(
+                                    <Alert message={response.message} type="success" closeText='Close now'/>,
+                                    newNode,
+                                );
+                                history.push('/Homepage')
+                                window.location.reload()
+                            } else {
+                                ReactDOM.render(
+                                    <Alert message={response.message} type="error" closeText='Close now'/>,
+                                    newNode,
+                                );
+                            }
+                        } else {
+                            //daca n-a functionat crearea contului, atunci informam user-ul si motivul pentru care nu s-a reusit
+                            ReactDOM.render(
+                                <Alert message={response.message} type="error" closeText='Close now'/>,
+                                newNode
+                            )
+                        }
+                    }}>Register
+                    </button>
+                </div>
+            )}
+        </AuthConsumer>
 
-                const response = await fetch('http://localhost:8000/users', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        username: document.getElementById('usernameRegister').value,
-                        email: document.getElementById('emailRegister').value,
-                        password: document.getElementById('passwordRegister').value
-                    })
-                })
-                console.log(response)
-                if (response.status === 200) {
-                    ReactDOM.render(
-                        <Alert message='Account successfully created' type="success" />,
-                        document.getElementById('container')
-                    )
-                } else {
-                    ReactDOM.render(
-                        <Alert message={response.message} type="warning" />,
-                        document.getElementById('container')
-                    )
-                }
-            }}>Register
-            </button>
-        </div>
     )
 
     return (
-        <AuthConsumer>
-            {({state, dispatch}) => (
-                <div>
-                    {toggleButtons}
-                    {form === 'login' ? loginForm : registerForm}
-                </div>
-            )}
+        <div id='authMenu'>
+            {toggles}
+            {form === 'login' ? loginForm : registerForm}
+        </div>
 
-        </AuthConsumer>
     )
-
 
 }
 
