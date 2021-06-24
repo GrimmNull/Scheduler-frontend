@@ -43,7 +43,7 @@ function App(props) {
 
     //Pagina principala este de fapt sidebar-ul si din el selectam pagina pe care s-o incarcam
     return (
-        //utilizam un context de autentificare pentru a evita sa folosim redux :D
+        //utilizam un context de autentificare pentru a evita sa folosim redux
         <AuthProvider>
             <AuthConsumer>
                 {({state, dispatch}) => (
