@@ -4,10 +4,11 @@ import {Alert, Radio} from 'antd';
 import * as ReactDOM from "react-dom";
 import {useHistory} from 'react-router-dom'
 import '../stylesheets/auth.scss'
+require('dotenv').config();
 
 //am extras functia care face apelul catre backend pentru verificarea datelor ca sa putem loga userul imediat cum isi face cont
 async function login(usernameField, passwordField) {
-    const response = await fetch('http://localhost:8000/users/auth/login', {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/users/auth/login`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -15,14 +16,15 @@ async function login(usernameField, passwordField) {
             password: document.getElementById(passwordField).value
         })
     })
-    if (response.status !== 200) {
+    const status= response.status
+    const results = await response.json()
+    if (status !== 200) {
         return {
             type: 'Error',
-            message: response.message
+            message: results.message
         }
     }
     //daca nu avem nicio eroare, atunci salvam in sessionStorage informatiile despre user
-    const results = await response.json()
     sessionStorage.setItem('userId', results.userId)
     sessionStorage.setItem('username', results.username)
     sessionStorage.setItem('email', results.email)
@@ -59,7 +61,7 @@ function Auth(props) {
                     <label>Username:</label><br/>
                     <input id='usernameInput' type='text'/><br/>
                     <label>Password:</label><br/>
-                    <input id='passwordInput' type='text'/><br/>
+                    <input id='passwordInput' type='password'/><br/>
                     <button onClick={async () => {
                         //chemam functia de login si verificam datele utilizatorului
                         const response = await login('usernameInput', 'passwordInput')
@@ -81,6 +83,7 @@ function Auth(props) {
                             sessionStorage.setItem('currentPage', 1)
                             window.location.reload()
                         } else {
+                            console.log(response)
                             ReactDOM.render(
                                 <Alert message={response.message} type="error" closeText='Close now'/>,
                                 newNode,
@@ -104,9 +107,9 @@ function Auth(props) {
                     <label>Email:</label><br/>
                     <input id='emailRegister' type='text'/><br/>
                     <label>Password:</label><br/>
-                    <input id='passwordRegister' type='text'/><br/>
+                    <input id='passwordRegister' type='password'/><br/>
                     <label>Confirm password:</label><br/>
-                    <input id='passwordConfirm' type='text'/><br/>
+                    <input id='passwordConfirm' type='password'/><br/>
                     <button onClick={async () => {
                         const main = document.getElementById('authMenu')
                         const newNode = document.createElement('div')
@@ -122,7 +125,7 @@ function Auth(props) {
                             )
                             return
                         }
-                        const response = await fetch('http://localhost:8000/users', {
+                        const response = await fetch(`${process.env.REACT_APP_API_URL}/users`, {
                             method: 'POST',
                             headers: {'Content-Type': 'application/json'},
                             body: JSON.stringify({

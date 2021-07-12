@@ -5,7 +5,7 @@ $duration: 0.5s;
   width: 70%;
 }
 
-#motImage {
+#homepageScreen > img {
   width: 80%;
   margin-right: 3vw;
   transition: width $duration;
@@ -15,7 +15,7 @@ $duration: 0.5s;
   width: 0px;
 }
 
-#motTitle {
+#homepageScreen > h1 {
   margin-left: 5vw;
   margin-top: 10vh;
   color: white;
@@ -27,7 +27,7 @@ $duration: 0.5s;
   font-size: 0px;
 }
 
-#descParagraph {
+#homepageScreen > h3 {
   margin-left: 8vw;
   margin-top: 2vh;
   color: white;
@@ -44,15 +44,15 @@ $duration: 0.5s;
   main {
     zoom: 1.5;
   }
-  #motImage {
+  .img {
     width: 100%;
     margin-right: 0;
     margin-top: 5vh;
   }
-  #motTitle {
+  .h1 {
     margin-top: 5vh;
   }
-  #descParagraph {
+  .h3 {
     margin-left: 0vw;
   }
 }

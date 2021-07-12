@@ -13,7 +13,6 @@ const {Sider, Content} = Layout;
 
 function getStartPage() {
     const page = sessionStorage.getItem('currentPage')
-    console.log(page)
     if (page) {
         return page
     }

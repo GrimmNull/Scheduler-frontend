@@ -3,6 +3,9 @@ import ReactDom from 'react-dom'
 import '../stylesheets/task.scss'
 import * as ReactDOM from "react-dom";
 import {Alert} from "antd";
+import DateTimePicker from 'react-datetime-picker';
+var dateFormat = require('dateformat');
+require('dotenv').config();
 
 
 const userToken = sessionStorage.getItem('token')
@@ -18,7 +21,7 @@ const Task = (props) => {
             setTaskId(props.taskId)
         } else {
             //daca nu, atunci facem un request ca sa fie creat un task al carui id ne va fi returnat
-            fetch('http://localhost:8000/tasks', {
+            fetch(`${process.env.REACT_APP_API_URL}/tasks`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -45,8 +48,8 @@ const Task = (props) => {
         <div id={'taskDisplay' + taskId}
              class={`${parentTaskId !== null ? 'subtask' : 'task'} ${completed ? 'completed' : failed ? 'failed' : 'pending'}`}>
             <p>Description: {description}</p>
-            <p>Start time: {startTime}</p>
-            <p>Deadline: {deadline}</p>
+            <p>Start time: {dateFormat(startTime,'dd/m/yyyy, h:MM:ss TT')}</p>
+            <p>Deadline: {dateFormat(deadline,'dd/m/yyyy, h:MM:ss TT')}</p>
 
             {//un subtask n-are subtask-uri la randul lui, asa ca ne asiguram ca doar un task normal poate sa-si adauge subtask-uri
                 parentTaskId ? '' :
@@ -82,7 +85,7 @@ const Task = (props) => {
 
                     const status = !completed
                     setCompleted(status)
-                    fetch(`http://localhost:8000/tasks/completed/${taskId}`, {
+                    fetch(`${process.env.REACT_APP_API_URL}/tasks/completed/${taskId}`, {
                         method: 'PUT',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
@@ -121,24 +124,38 @@ const Task = (props) => {
             <label> Description: </label>
             <input id={'DescriptionOfTask' + taskId} type="text" defaultValue={description}/><br/>
             <label> Start time: </label>
-            <input id={'StartTime' + taskId} type="datetime-local" defaultValue={startTime}/><br/>
+            <DateTimePicker
+            onChange={setStartTime}
+            value={new Date(startTime)}
+            format='y-M-dd h:mm:ss a'
+            /> <br/>
             <label> Deadline:</label>
-            <input id={'Deadline' + taskId} type="datetime-local" defaultValue={deadline}/><br/>
+            <DateTimePicker
+                onChange={setDeadline}
+                value={new Date(deadline)}
+                format='y-M-dd h:mm:ss a'
+            /> <br/>
             <button onClick={() => {
                 const main = document.getElementById('taskPageStart')
                 const newNode = document.createElement('div')
                 main.parentNode.insertBefore(newNode, main)
 
-                const startTime = document.getElementById('StartTime' + taskId).value,
-                    deadline = document.getElementById('Deadline' + taskId).value,
-                    description = document.getElementById('DescriptionOfTask' + taskId).value
+                const description = document.getElementById('DescriptionOfTask' + taskId).value
 
                 const dataStart = new Date(startTime),
                     dataDeadline = new Date(deadline)
 
                 if (dataStart > dataDeadline) {
                     ReactDOM.render(
-                        <Alert message='The deadline can`t be before the start' type="success"
+                        <Alert message='The deadline can`t be before the start' type="warning"
+                               closeText="Close Now"/>, newNode,
+                    )
+                    return
+                }
+
+                if(description==='' || description.replaceAll(' ','')===''){
+                    ReactDOM.render(
+                        <Alert message='The task must have a description' type="error"
                                closeText="Close Now"/>, newNode,
                     )
                     return
@@ -146,13 +163,11 @@ const Task = (props) => {
 
                 //facem update-ul pe frontend
                 setDescription(description)
-                setStartTime(startTime)
-                setDeadline(deadline)
 
                 //dupa care trimitem request-ul catre backend
                 //Motivatia este ca daca asteptam pana primim raspuns interfata se poate simti un pic unresponsive
                 //In caz de eroare user-ul primeste mesaj, iar dupa ce da refresh are din nou datele de pe backend
-                fetch(`http://localhost:8000/tasks/${taskId}`, {
+                fetch(`${process.env.REACT_APP_API_URL}/tasks/${taskId}`, {
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -176,6 +191,7 @@ const Task = (props) => {
                         }
 
                     })
+                console.log(startTime)
             }}>Finish edits
             </button>
             <button onClick={() => {
@@ -183,7 +199,7 @@ const Task = (props) => {
                 const newNode = document.createElement('div')
                 main.parentNode.insertBefore(newNode, main)
 
-                fetch(`http://localhost:8000/tasks/${taskId}`, {
+                fetch(`${process.env.REACT_APP_API_URL}/tasks/${taskId}`, {
                     method: 'DELETE',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({

@@ -3,13 +3,14 @@ import Task from "../components/Task"
 import {useEffect, useState} from "react"
 import {Button} from 'antd';
 import {PlusOutlined} from '@ant-design/icons';
+require('dotenv').config();
 
 const userId = sessionStorage.getItem('userId')
 
 
 //luam prima data doar task-urile principale
 async function fetchRootTasks() {
-    const rootTasks = await (await fetch(`http://localhost:8000/users/tasks/${userId}?rootOnly=true`, {
+    const rootTasks = await (await fetch(`${process.env.REACT_APP_API_URL}/users/tasks/${userId}?rootOnly=true`, {
         method: 'GET'
     })).json()
     return rootTasks.results
@@ -18,7 +19,7 @@ async function fetchRootTasks() {
 
 //apoi le luam si subtask-urile
 async function fetchSubTasks(id) {
-    const subtasks = await (await fetch(`http://localhost:8000/tasks/subtasks/${id}`, {
+    const subtasks = await (await fetch(`${process.env.REACT_APP_API_URL}/tasks/subtasks/${id}`, {
         method: 'GET'
     })).json()
     return subtasks.results
@@ -83,15 +84,20 @@ function TaskScreen(props) {
                 if (!Array.isArray(rootTasks)) {
                     setRootTasks([<Task
                         initialState={true}
+                        completed={false}
+                        failed={false}
                         title={''}
                         description={''}
                     />])
                 } else {
-                    setRootTasks([<Task
+                    console.log(rootTasks)
+                    setRootTasks(Array.from([<Task
                         initialState={true}
+                        completed={false}
+                        failed={false}
                         title={''}
                         description={''}
-                    />, ...rootTasks])
+                    />, ...rootTasks]))
                 }
             }}>
                 Add task

@@ -21,28 +21,24 @@ const images = [Loki, Plan, DrWho]
 
 function Homepage(props) {
     const [slide, setSlide] = useState(0)
+    const [image,setImage]= useState(images[0])
+    const [title, setTitle]= useState(titles[0])
+    const [description,setDescription]= useState(descriptions[0])
     useEffect(() => {
         //la fiecare 10 secunde schimbam imaginea, titlul si descrierea de pe homepage
         const id = setInterval(() => {
-            console.log('Gorin')
-            document.getElementById('motImage').setAttribute('class', 'next')
-            document.getElementById('motTitle').setAttribute('class', 'next')
-            document.getElementById('descParagraph').setAttribute('class', 'next')
-            setTimeout(() => {
-                setSlide((slide + 1) % 3)
-                document.getElementById('motImage').setAttribute('class', '')
-                document.getElementById('motTitle').setAttribute('class', '')
-                document.getElementById('descParagraph').setAttribute('class', '')
-            }, 1000);
-
+            setSlide((slide+1)%titles.length)
+            setImage(images[slide])
+            setTitle(titles[slide])
+            setDescription(descriptions[slide])
         }, 10000);
         return () => clearInterval(id);
     }, [slide])
     return (
         <div id='homepageScreen'>
-            <img id='motImage' src={images[slide]} alt='motivationalImage'/>
-            <h1 id='motTitle'>{titles[slide]}</h1>
-            <h3 id='descParagraph'>{descriptions[slide]}</h3>
+            <img src={image} alt="Motivational"/>
+            <h1>{title}</h1>
+            <h3>{description}</h3>
         </div>
     )
 }

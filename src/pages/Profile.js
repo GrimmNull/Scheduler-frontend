@@ -4,6 +4,7 @@ import {Alert} from "antd";
 import '../stylesheets/Profile.scss'
 import {useState} from "react";
 import {AuthConsumer} from "../contexts/Auth";
+require('dotenv').config();
 
 //Si la profil teoretic avem doar doua ecrane, unul pe care prezentam informatiile referitoare la cont, si inca unul pe care le poate edita
 function Profile(props) {
@@ -114,7 +115,7 @@ function Profile(props) {
                             ownerToken: sessionStorage.getItem('token'),
                             email: document.getElementById('editField1').value
                         }
-                fetch(`http://localhost:8000/users/${sessionStorage.getItem('userId')}`, {
+                fetch(`${process.env.REACT_APP_API_URL}/users/${sessionStorage.getItem('userId')}`, {
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(data)
