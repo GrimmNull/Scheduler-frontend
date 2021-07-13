@@ -3,75 +3,39 @@ import Task from "../components/Task"
 import {useEffect, useState} from "react"
 import {Button} from 'antd';
 import {PlusOutlined} from '@ant-design/icons';
+
 require('dotenv').config();
 
 const userId = sessionStorage.getItem('userId')
 
-
-//luam prima data doar task-urile principale
-async function fetchRootTasks() {
-    const rootTasks = await (await fetch(`${process.env.REACT_APP_API_URL}/users/tasks/${userId}?rootOnly=true`, {
-        method: 'GET'
-    })).json()
-    return rootTasks.results
-}
-
-
-//apoi le luam si subtask-urile
-async function fetchSubTasks(id) {
-    const subtasks = await (await fetch(`${process.env.REACT_APP_API_URL}/tasks/subtasks/${id}`, {
-        method: 'GET'
-    })).json()
-    return subtasks.results
-}
-
-
-//iar la final le unim intr-o singura lista
-async function addSubTasks() {
-    const results = await fetchRootTasks()
-    if (!results) {
-        return 'You have no tasks at this moment'
-    }
-    let lista = results.map(async task => {
-        const subtasks = await fetchSubTasks(task.taskId)
-        return [].concat(task, subtasks)
-    })
-    return lista
-
-}
-
-//Cele 3 functii normal puteau fi facute pe backend, dar imi doream la un moment dat sa iau separat task-urile si dupa sa pun subtask-urile intr-un div,
-//doar ca momentan nu prea am gasit o solutie pentru a face asta
-
 async function fetchTasks(setter) {
     setter('')
-    const promisedResults = await addSubTasks()
-    if (typeof promisedResults === "string") {
+    const promisedResults = await (await fetch(`${process.env.REACT_APP_API_URL}/tasks/${userId}`, {
+        method: 'GET'
+    })).json()
+    if (promisedResults.results===[]) {
         setter(<div id='noTasksMessage'>{promisedResults}</div>)
         return
     }
-    //iar aici daca user-ul are macar un task in lista, facem un vector de obiecte de tip Task
-    Promise.all(promisedResults).then((res) => {
-            const taskScreen = res.flat(1).map(task => {
-                if (task) {
-                    return <Task
-                        taskId={task.taskId}
-                        initialState={false}
-                        parentTaskId={task.parentTaskId}
-                        title={task.title}
-                        description={task.description}
-                        startTime={task.startTime}
-                        deadline={task.deadline}
-                        completed={task.completed}
-                        failed={task.failed}
-                    />
-                } else {
-                    return <br/>
-                }
-            })
-            setter(taskScreen)
+
+    const taskScreen = promisedResults.results.map(task => {
+        if (task) {
+            return <Task
+                taskId={task.taskId}
+                initialState={false}
+                parentTaskId={task.parentTaskId}
+                title={task.title}
+                description={task.description}
+                startTime={task.startTime}
+                deadline={task.deadline}
+                completed={task.completed}
+                failed={task.failed}
+            />
+        } else {
+            return <br/>
         }
-    )
+    })
+    setter(taskScreen)
 
 }
 
@@ -81,7 +45,7 @@ function TaskScreen(props) {
         <div id='taskPageStart'>
             <Button id='addTaskBtn' type="primary" shape="round" icon={<PlusOutlined/>} size={'large'} onClick={() => {
                 //verificam daca avem deja un task existent sau este primul pe care il adaugam in lista
-                if (!Array.isArray(rootTasks)) {
+                if (rootTasks.length===0) {
                     setRootTasks([<Task
                         initialState={true}
                         completed={false}
@@ -90,7 +54,6 @@ function TaskScreen(props) {
                         description={''}
                     />])
                 } else {
-                    console.log(rootTasks)
                     setRootTasks(Array.from([<Task
                         initialState={true}
                         completed={false}

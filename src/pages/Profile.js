@@ -80,9 +80,9 @@ function Profile(props) {
                 :
                 <>
                     <label>New password:</label><br/>
-                    <input id='editField2' type='text'/><br/>
+                    <input id='editField2' type='password'/><br/>
                     <label>Confirm new password:</label><br/>
-                    <input id='editField3' type='text'/><br/>
+                    <input id='editField3' type='password'/><br/>
                 </>
             }
 

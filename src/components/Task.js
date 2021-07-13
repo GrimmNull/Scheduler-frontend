@@ -37,8 +37,8 @@ const Task = (props) => {
         }
     }, [parentTaskId, props])
     const [description, setDescription] = useState(props.description)
-    const [startTime, setStartTime] = useState(props.startTime)
-    const [deadline, setDeadline] = useState(props.deadline)
+    const [startTime, setStartTime] = useState(props.startTime ? props.startTime : new Date())
+    const [deadline, setDeadline] = useState(props.deadline ? props.deadline : new Date())
     const [completed, setCompleted] = useState(props.completed)     //descrie daca un task/subtask a fost finalizat sau nu
     const [failed, setFailed] = useState(props.failed)              //descrie daca un task/subtask a fost ratat sau nu
 
