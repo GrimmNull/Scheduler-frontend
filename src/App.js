@@ -16,8 +16,9 @@ function getStartPage() {
     if (page) {
         return page
     }
-    return 1
+    return 3
 }
+
 function setCurrentPage(page) {
     sessionStorage.setItem('currentPage', page)
 }
@@ -60,13 +61,16 @@ function App(props) {
                                     defaultSelectedKeys={[`${getStartPage()}`]}
                                     mode="inline"
                                 >
-                                    <Menu.Item
-                                        key="1"
-                                        icon={<DesktopOutlined/>}
-                                        onClick={() => setCurrentPage(1)}
-                                    >
-                                        <Link to='/homepage'>Homepage</Link>
-                                    </Menu.Item>
+                                    {
+                                        state.auth ? <Menu.Item
+                                            key="1"
+                                            icon={<DesktopOutlined/>}
+                                            onClick={() => setCurrentPage(1)}
+                                        >
+                                            <Link to='/homepage'>Homepage</Link>
+                                        </Menu.Item> : ''
+                                    }
+
                                     {//ne asiguram mai intai ca avem un user logat inainte de a-i permite accesul la pagina de task-uri
                                         state.auth ? <Menu.Item
                                             key="2"

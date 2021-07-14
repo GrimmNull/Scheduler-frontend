@@ -43,8 +43,8 @@ function Profile(props) {
                         newNode,
                     );
                     dispatch({type: 'disconnect'})
-                    history.push('/Homepage')
-                    sessionStorage.setItem('currentPage', 1)
+                    history.push('/Auth')
+                    sessionStorage.setItem('currentPage', 3)
                     window.location.reload()
                 }}>
                     Logout

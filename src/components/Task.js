@@ -191,7 +191,6 @@ const Task = (props) => {
                         }
 
                     })
-                console.log(startTime)
             }}>Finish edits
             </button>
             <button onClick={() => {
