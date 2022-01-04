@@ -1,27 +1,32 @@
 .homepageScreen {
+  display:block;
   margin: auto;
-  width: 70%;
+  width: 90%;
 }
 
-.homepageScreen > img {
-  width: 80%;
-  margin-right: 3vw;
+.homepageScreen > div{
+  color:black
 }
 
-.homepageScreen > h1 {
-  margin-left: 5vw;
-  margin-top: 10vh;
-  color: white;
-  text-wrap: normal;
+.events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-
-.homepageScreen > h3 {
-  margin-left: 8vw;
-  margin-top: 2vh;
-  color: white;
-  text-wrap: normal;
+.events .ant-badge-status {
+  width: 100%;
+  overflow: hidden;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-
+.notes-month {
+  font-size: 28px;
+  text-align: center;
+}
+.notes-month section {
+  font-size: 28px;
+}
 
 @media only screen and (max-width: 600px) {
   main {

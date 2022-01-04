@@ -6,65 +6,38 @@ main > * {
   color: white
 }
 
-#profileScreen, #editScreen {
+.profileCard {
+
+  width:50vw;
+  margin:auto;
+}
+
+.profileCard > .ant-btn {
+  justify-self: end;
+}
+
+.profileCard > .ant-card-body {
+
   display: flex;
   flex-direction: column;
-  border: 1px solid coral;
-  border-radius: 9px;
-  width: 50%;
-  height: 50%;
-  margin: auto;
-  background: linear-gradient(0deg, rgba(0, 0, 50, 0.6), rgba(0, 0, 50, 0.6));
+  color:black;
 }
 
-
-#logoutBtn, #changePassBtn, #cancelEditBtn, #submitBtn {
-  border: 1px solid coral;
-  width: 40%;
-  margin-left: auto;
-  margin-right: auto;
+.editCard > .ant-card-body {
+  align-items: center;
 }
 
-#logoutBtn:hover, #changePassBtn:hover, #cancelEditBtn:hover, #submitBtn:hover {
-  background: coral;
+.editForm > .ant-row > .ant-col > .ant-form-item-required {
+  margin-right: 2vw;
 }
 
-#profileScreen > *:not(#logoutBtn,#changePassBtn) {
-  margin-left: 1vw;
-}
-
-#profileScreen :first-child {
-  margin-top: 2vh;
-}
-
-#editScreen :first-child {
-  margin-top: 2vh;
-}
-
-#editScreen > *:not(button) {
-  margin-left: 1vw;
-}
-
-#editScreen > button:first-of-type {
-  margin-top: 5vh;
-}
-
-#editScreen > button {
-  margin-bottom: 1vh;
-}
-
-#editScreen > label {
-  margin-bottom: 0;
-  font-size: 2vh;
-}
-
-#editScreen > input {
-  width: 50%;
-  border: 1px solid coral;
+.editForm > .ant-btn-primary {
+  margin-left:2vw;
+  margin-right: 0.5vw;
 }
 
 #infos > h2 {
-  color: white
+  color: black;
 }
 
 #infos > h2:hover {
@@ -76,28 +49,41 @@ main > * {
   main {
     zoom: 1.5;
   }
-  #profileScreen, #editScreen {
+  .profileCard {
     width: 90%;
     height: 80%;
+    text-wrap: normal;
+    overflow: hidden;
+  }
+
+  .profileCard > .ant-card-body {
+    width:100%;
+    padding:3vw;
+  }
+
+  .profileCard > * {
+    text-wrap: normal;
+  }
+
+  .profileCard > .ant-card-body > .ant-btn {
+    width:100%;
+    font-size:2.5vw;
   }
   #infos > h2 {
     font-size: 3vw;
   }
 
-  #logoutBtn, #changePassBtn, #cancelEditBtn, #submitBtn {
-    width: 70%;
+  .editForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .editForm > .ant-btn-primary {
+    margin-bottom: 5vw;
   }
 }
 
 @media only screen and (max-width: 400px) {
-  #logoutBtn, #changePassBtn, #cancelEditBtn, #submitBtn {
-    width: 90%;
-  }
-  #editScreen > button:first-of-type {
-    margin-top: 2vh;
-  }
 
-  #editScreen > input {
-    width: 90%;
-  }
 }

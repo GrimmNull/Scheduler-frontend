@@ -1,62 +1,32 @@
-#authMenu {
+.authMenu {
   display: flex;
   flex-direction: column;
-  border: 1px solid coral;
-  background: linear-gradient(0deg, rgba(0, 0, 50, 0.6), rgba(0, 0, 50, 0.6));
+  justify-content: center;
   margin: auto;
   border-radius: 9px;
-  width: 50%;
-  height: 70%;
+  width: 50vw;
+  height: 25vw;
 }
 
-#authMenu > .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-  background: coral !important;
-  border: 1px solid coral !important;
-}
-
-.ant-radio-button-wrapper {
-  background: linear-gradient(0deg, rgba(0, 0, 50, 0.6), rgba(0, 0, 50, 0.6)) !important;
-  color: white !important;
-}
-
-#authMenu > *:not(button) {
-  margin-left: 1vw;
-}
-
-#authMenu > #selector, #authMenu > #loginForm, #authMenu > #registerForm {
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 1vh;
-}
-
-#authMenu > #loginForm, #authMenu > #registerForm {
-  align-items: revert;
-}
-
-#loginForm > *:not(label), #registerForm > *:not(label) {
-  border: 1px solid coral;
-}
-
-#authMenu > #loginForm, #authMenu > #registerForm {
+.authForm {
   font-size: 1vw;
   display: flex;
   flex-direction: column;
 }
 
-
-#authMenu > #loginForm > label, #authMenu > #loginForm > input, #authMenu > #registerForm > label, #authMenu > #registerForm > input {
-  margin-bottom: 0;
+.authMenu > .ant-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-#authMenu > #loginForm :last-child, #authMenu > #registerForm :last-child {
-  margin-left: auto;
-  margin-right: 0;
-  margin-top: 1vh;
+.authMenu > .ant-card-body > .ant-radio-group{
+  margin-bottom: 2vw;
 }
 
-#authMenu > button {
-  margin-left: auto;
-  margin-right: auto;
+.ant-col-8 {
+  flex: 0 0 35%;
+  max-width: 43%;
 }
 
 
@@ -64,17 +34,8 @@
   main {
     zoom: 1.5;
   }
-  #authMenu {
+  .authMenu {
     width: 90%;
-  }
-
-  #authMenu > .ant-radio-button-wrapper > .ant-radio-button {
-    width: 40% !important;
-  }
-
-  .ant-radio-group-solid .ant-radio-button-wrapper {
-    width: 40% !important;
-    font-size: 1.5vh;
   }
 }
 
@@ -82,7 +43,7 @@
   main {
     zoom: 1.5;
   }
-  #authMenu {
+  .authMenu {
     width: 90%;
   }
 

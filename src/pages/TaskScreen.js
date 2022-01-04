@@ -1,24 +1,37 @@
 import '../stylesheets/task.scss'
-import Task from "../components/Task"
-import {useEffect, useState} from "react"
-import {Button} from 'antd';
-import {PlusOutlined} from '@ant-design/icons';
+import {useEffect, useReducer} from "react"
+import {AddTaskScreen} from "../components/AddTaskScreen";
+import {useFetch} from "../contexts/Refetch.js";
+import {Space, Spin} from 'antd'
+import {initialState, tasksReducer} from '../reducers/FetchReducer.js'
+import Task from "../components/Task";
+import {useCategories} from "../contexts/Categories.js";
+
 
 require('dotenv').config();
+const userId = localStorage.getItem('userId')
 
-const userId = sessionStorage.getItem('userId')
 
-async function fetchTasks(setter) {
-    setter('')
-    const promisedResults = await (await fetch(`${process.env.REACT_APP_API_URL}/tasks/${userId}`, {
+const getTasks = async (dispatch) => {
+    dispatch({type: 'hide'})
+    const tasks = await (await fetch(`${process.env.REACT_APP_API_URL}/tasks/user/${userId}`, {
         method: 'GET'
     })).json()
-    if (promisedResults.results===[]) {
-        setter(<div id='noTasksMessage'>{promisedResults}</div>)
-        return
-    }
+    dispatch({type: 'load', payload: tasks.results})
+}
 
-    const taskScreen = promisedResults.results.map(task => {
+const getCategories = async (dispatch) => {
+    const categories = await (await fetch(`${process.env.REACT_APP_API_URL}/categories`, {
+        method: 'GET'
+    })).json()
+    dispatch({type:'categories', payload:categories.results})
+}
+
+const convertToJSX = (tasks) => {
+    if (tasks === '') {
+        return <h1>You have no tasks at this moment</h1>
+    }
+    return tasks.map(task => {
         if (task) {
             return <Task
                 taskId={task.taskId}
@@ -30,50 +43,48 @@ async function fetchTasks(setter) {
                 deadline={task.deadline}
                 completed={task.completed}
                 failed={task.failed}
+                categories={task.categories}
             />
         } else {
             return <br/>
         }
     })
-    setter(taskScreen)
-
 }
 
 function TaskScreen(props) {
-    const [rootTasks, setRootTasks] = useState('')
-    const taskPage = (
-        <div id='taskPageStart'>
-            <Button id='addTaskBtn' type="primary" shape="round" icon={<PlusOutlined/>} size={'large'} onClick={() => {
-                //verificam daca avem deja un task existent sau este primul pe care il adaugam in lista
-                if (rootTasks.length===0) {
-                    setRootTasks([<Task
-                        initialState={true}
-                        completed={false}
-                        failed={false}
-                        title={''}
-                        description={''}
-                    />])
-                } else {
-                    setRootTasks(Array.from([<Task
-                        initialState={true}
-                        completed={false}
-                        failed={false}
-                        title={''}
-                        description={''}
-                    />, ...rootTasks]))
-                }
-            }}>
-                Add task
-            </Button>
+    const [state, dispatch] = useReducer(tasksReducer, initialState)
+    const refetch = useFetch(state => state.refetch)
+    const setCategories= useCategories(state => state.setCategories)
+    useEffect(() => {
+        //setTimeout-ul este pentru a putea vizualiza spinner-ul
+        setTimeout(() => {
+            getTasks(dispatch)
+        }, 1500)
+    }, [refetch])
 
-            {rootTasks}
+    useEffect(() => {
+        getCategories(dispatch)
+    } ,[])
+
+    useEffect(() => {
+        setCategories(state.categoriesTemp)
+    }, [state.categoriesTemp])
+
+    return (
+        <div id='taskPageStart' className='appPage'>
+            <Space direction='vertical' size={20}>
+                <AddTaskScreen
+                    root={true}
+                    mode='add'
+                />
+                <Space direction='vertical' size={40}>
+                    {state.loading ? (
+                        <Spin className='center biggerText' tip="Loading tasks..."/>) : convertToJSX(state.tasks)}
+
+                </Space>
+            </Space>
         </div>
     )
-    useEffect(() => {
-        fetchTasks((setRootTasks))
-    }, [])
-    //din fericire, fetch-ul este suficient de rapid incat nu prea se vede partea de fetching
-    return rootTasks === '' ? (<h1>Fetching your tasks right now...</h1>) : (taskPage)
 }
 
 export default TaskScreen
